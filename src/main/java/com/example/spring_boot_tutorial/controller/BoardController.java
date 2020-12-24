@@ -2,13 +2,12 @@ package com.example.spring_boot_tutorial.controller;
 
 import com.example.spring_boot_tutorial.model.Board;
 import com.example.spring_boot_tutorial.repository.BoardRepository;
+import com.example.spring_boot_tutorial.validator.BoardValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,6 +18,9 @@ public class BoardController {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardValidator boardValidator;
 
     @GetMapping("/list")
     public String list(Model model) {
@@ -41,12 +43,15 @@ public class BoardController {
 
     @PostMapping("/form")
     public String greetingSubmit(@Valid Board board, BindingResult bindingResult) {
+        System.out.println(boardValidator);
+        boardValidator.validate(board, bindingResult);
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
         boardRepository.save(board);
         return "redirect:/board/list";
     }
+
 
 
 }
