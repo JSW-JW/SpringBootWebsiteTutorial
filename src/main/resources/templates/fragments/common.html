@@ -36,7 +36,9 @@
                         <a class="nav-link" href="#" th:href="@{/board/list}">게시판</a>
                     </li>
                 </ul>
-                <a class="btn btn-secondary" th:href="@{/account/login}" sec:authorize="!isAuthenticated()">Login</a>
+                <a class="btn btn-secondary my-2 mx-2" th:href="@{/account/login}"
+                    sec:authorize="!isAuthenticated()">로그인</a>
+                <a class="btn btn-secondary" th:href="@{/account/register}" sec:authorize="!isAuthenticated()">회원가입</a>
                 <form class="form-inline my-2 my-lg-0" th:action="@{/perform_logout}" method="POST"
                     sec:authorize="isAuthenticated()">
                     <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->

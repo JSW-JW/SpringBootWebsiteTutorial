@@ -1,14 +1,15 @@
 package com.example.spring_boot_tutorial.model;
 
 import com.sun.istack.NotNull;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Data
 public class Board {
@@ -21,4 +22,14 @@ public class Board {
     private String title;
 
     private String content;
+
+    @Column(columnDefinition = "picture")
+    private Picture picture;
+
+    @Builder
+    public Board( String title, String content, Picture picture) {
+        this.title = title;
+        this.content = content;
+        this.picture = picture;
+    }
 }
