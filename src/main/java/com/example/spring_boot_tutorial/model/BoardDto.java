@@ -14,11 +14,17 @@ public class BoardDto {
     private String filePath;
 
     public Board toEntity(){
+
         Board board = Board.builder()
-                .picture(new Picture(filePath))
                 .title(title)
                 .content(content)
                 .build();
+
+        Picture picture = new Picture(filePath);
+        picture.setBoard(board); // set FK on Picture Table
+
+        board.setPicture(picture);
+
         return board;
     }
 

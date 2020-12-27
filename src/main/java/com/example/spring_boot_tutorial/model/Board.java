@@ -27,7 +27,7 @@ public class Board {
     private Picture picture;
 
     @Builder
-    public Board( String title, String content, Picture picture) {
+    public Board(String title, String content, Picture picture) {
         this.title = title;
         this.content = content;
         this.picture = picture;

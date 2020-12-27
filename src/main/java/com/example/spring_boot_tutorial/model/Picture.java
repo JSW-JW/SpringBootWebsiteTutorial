@@ -1,13 +1,11 @@
 package com.example.spring_boot_tutorial.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
+@Data
 public class Picture {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -21,5 +19,8 @@ public class Picture {
 
     public Picture(String filePath) {
         this.filePath = filePath;
+    }
+
+    public Picture() {
     }
 }
