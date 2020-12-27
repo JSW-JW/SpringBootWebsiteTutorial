@@ -12,9 +12,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 //    Page<Board> findAll(Pageable pageable);
 
-    List<BoardDto> findByTitle(String title);
-    List<BoardDto> findByTitleOrContent(String title, String content);
+//    Page<Board> findByTitle(String title);
+//    Page<Board> findByTitleOrContent(String title, String content);
 
-    Page<BoardDto> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
+    Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 
 }

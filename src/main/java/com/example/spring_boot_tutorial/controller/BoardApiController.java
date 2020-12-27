@@ -18,20 +18,16 @@ class BoardApiController {
         this.repository = repository;
     }
 
-
-    // Aggregate root
-    // tag::get-aggregate-root[]
-    @GetMapping("/boards")
-    List<Board> all(@RequestParam(required = false) String title,
-                    @RequestParam(required = false) String content) {
-        if (StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
-            return repository.findAll();
-        }
-        else {
-            return repository.findByTitleOrContent(title, content);
-        }
-    }
-    // end::get-aggregate-root[]
+//    @GetMapping("/boards")
+//    List<Board> all(@RequestParam(required = false) String title,
+//                    @RequestParam(required = false) String content) {
+//        if (StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
+//            return repository.findAll();
+//        }
+//        else {
+//            return repository.findByTitleOrContent(title, content);
+//        }
+//    }
 
     @PostMapping("/boards")
     Board newBoard(@RequestBody Board newBoard) {
@@ -41,7 +37,7 @@ class BoardApiController {
     // Single item
 
     @GetMapping("/boards/{id}")
-    Board one(@PathVariable Long id) {
+    Board findBoardById(@PathVariable Long id) {
 
         return repository.findById(id).orElse(null);
     }

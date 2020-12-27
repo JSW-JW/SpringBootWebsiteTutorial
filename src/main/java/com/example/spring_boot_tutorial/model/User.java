@@ -1,6 +1,5 @@
 package com.example.spring_boot_tutorial.model;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;

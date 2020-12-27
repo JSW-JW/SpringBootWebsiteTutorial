@@ -13,8 +13,11 @@ public class Picture {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
     private String filePath;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BOARD_ID")
+    private Board board;
 
     public Picture(String filePath) {
         this.filePath = filePath;

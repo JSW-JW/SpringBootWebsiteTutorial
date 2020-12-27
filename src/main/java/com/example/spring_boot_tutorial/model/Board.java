@@ -23,7 +23,7 @@ public class Board {
 
     private String content;
 
-    @Column(columnDefinition = "picture")
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
     private Picture picture;
 
     @Builder
