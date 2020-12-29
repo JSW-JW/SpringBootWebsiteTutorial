@@ -18,9 +18,11 @@ public class BoardService {
 
     public BoardDto changeEntity(Board board) {
         BoardDto boardDto = new BoardDto();
+        boardDto.setId(board.getId());
         boardDto.setTitle(board.getTitle());
         boardDto.setContent(board.getContent());
         boardDto.setPicture(board.getPicture());
+        boardDto.setFilePath(board.getPicture().getFilePath());
 
         return boardDto;
     }

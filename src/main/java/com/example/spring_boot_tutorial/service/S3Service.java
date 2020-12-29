@@ -1,11 +1,13 @@
 package com.example.spring_boot_tutorial.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,8 +47,26 @@ public class S3Service {
     public String upload(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
 
+        try {
+
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, fileName).toString();
+        } catch(AmazonServiceException e) {
+            e.printStackTrace();
+            return s3Client.getUrl(bucket, fileName).toString();
+        }
+
+    }
+
+    public void delete() throws IOException {
+
+        try {
+
+        s3Client.deleteObject(new DeleteObjectRequest(bucket, "cafes.jpg"));
+
+        } catch (AmazonServiceException e) {
+            e.printStackTrace();
+        }
     }
 }

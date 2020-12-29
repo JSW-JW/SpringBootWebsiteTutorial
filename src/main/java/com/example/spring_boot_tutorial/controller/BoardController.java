@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.List;
 
+import static jdk.nashorn.internal.objects.Global.print;
+
 @Controller
 @RequestMapping("/board")
 @AllArgsConstructor
@@ -75,6 +77,17 @@ public class BoardController {
         boardDto.setFilePath(imgPath);
 
         boardService.saveBoard(boardDto);
+
+        return "redirect:/board/list";
+    }
+
+    /*  TODO: 1. add s3 KeyName column in the db
+              2.
+     */
+
+    @GetMapping("/form/delete")
+    public String deleteBoard() throws Exception {
+        s3Service.delete();
 
         return "redirect:/board/list";
     }

@@ -22,6 +22,10 @@
 
     <div class="container">
         <h2>게시판</h2>
+        <form action="#" th:action="@{/board/form/delete}" th:object="${board}" method="get">
+            <input type="hidden" name="_method" value="delete" />
+            <button type="submit" class="btn">삭제</button>
+        </form>
         <form action="#" th:action="@{/board/form}" th:object="${board}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
 
@@ -35,7 +39,8 @@
                 </div>
             </div>
 
-            <input type="file" name="file">
+            <input type="file" accept="image/*" name="file">
+            <image th:src="*{filePath}"></image>
 
             <div class="form-group">
                 <label for="content" class="form-label">내용</label>
