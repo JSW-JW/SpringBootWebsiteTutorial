@@ -85,7 +85,7 @@ public class BoardController {
               2.
      */
 
-    @GetMapping("/form/delete")
+    @GetMapping("/form/delete") // GET mapping for deleting s3, db object.
     public String deleteBoard() throws Exception {
         s3Service.delete();
 
