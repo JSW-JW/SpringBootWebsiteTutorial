@@ -1,10 +1,10 @@
 package com.example.spring_boot_tutorial.model;
 
 import lombok.*;
+import org.apache.http.util.TextUtils;
 
 @Getter
 @Setter
-@ToString // Be cautious!
 @NoArgsConstructor
 public class BoardDto {
     private Long id;
@@ -12,21 +12,10 @@ public class BoardDto {
     private String content;
     private Picture picture;
     private String filePath;
+    private String originalFileName;
+    private String storedFileName;
 
-    public Board toEntity(){
 
-        Board board = Board.builder()
-                .title(title)
-                .content(content)
-                .build();
-
-        Picture picture = new Picture(filePath);
-        picture.setBoard(board); // set FK on Picture Table
-
-        board.setPicture(picture);
-
-        return board;
-    }
 
     @Builder
     public BoardDto(String title, String content, String filePath) {

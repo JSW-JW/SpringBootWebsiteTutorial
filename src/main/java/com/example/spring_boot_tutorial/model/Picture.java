@@ -12,6 +12,8 @@ public class Picture {
     private Long id;
 
     private String filePath;
+    private String originalFileName;
+    private String storedFileName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BOARD_ID")

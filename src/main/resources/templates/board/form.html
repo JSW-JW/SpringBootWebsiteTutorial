@@ -22,12 +22,17 @@
 
     <div class="container">
         <h2>게시판</h2>
-        <form action="#" th:action="@{/board/form/delete}" th:object="${board}" method="get">
-            <input type="hidden" name="_method" value="delete" />
+
+        <form action="#" th:action="@{/board/delete}" th:object="${board}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{picture.storedFileName}">
             <button type="submit" class="btn">삭제</button>
         </form>
+
         <form action="#" th:action="@{/board/form}" th:object="${board}" method="post" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{picture.storedFileName}">
+            <input type="hidden" th:field="*{picture.id}">
 
             <div class="form-group">
                 <label for="title" class="form-label">제목</label>

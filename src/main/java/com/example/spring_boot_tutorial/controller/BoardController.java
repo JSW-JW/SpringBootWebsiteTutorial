@@ -40,7 +40,7 @@ public class BoardController {
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 3) Pageable pageable,
+    public String list(Model model, @PageableDefault(size = 10) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "") String searchText) {
 //        Page<Board> boards = boardRepository.findAll(pageable);
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);
@@ -59,7 +59,7 @@ public class BoardController {
         } else {
             Board board = boardRepository.findById(id).orElse(null);
             if (board != null) {
-                BoardDto boardDto = boardService.changeEntity(board);
+                BoardDto boardDto = boardService.toDto(board);
                 model.addAttribute("board", boardDto);
             }
         }
@@ -67,16 +67,32 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String greetingSubmit(@Valid BoardDto boardDto, MultipartFile file, BindingResult bindingResult) throws Exception {
+    public String submitBoard(@Valid BoardDto boardDto, @RequestParam(required = false) Long id, MultipartFile file, BindingResult bindingResult) throws Exception {
 //        System.out.println(boardValidator);
 //        boardValidator.validate(board, bindingResult);
 //        if (bindingResult.hasErrors()) {
 //            return "board/form";
 //        }
-        String imgPath = s3Service.upload(file);
-        boardDto.setFilePath(imgPath);
 
-        boardService.saveBoard(boardDto);
+
+
+        if (!file.isEmpty()) {
+
+            String imgPath = s3Service.upload(file);
+            String storedFileName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
+            String originalFileName = file.getOriginalFilename();
+
+            boardDto.setFilePath(imgPath);
+            boardDto.setOriginalFileName(originalFileName);
+            boardDto.setStoredFileName(storedFileName);
+
+            Board board = boardService.toEntity(boardDto, true);
+            boardService.saveBoard(board);
+
+        } else {
+            Board board = boardService.toEntity(boardDto, false);
+            boardService.saveBoard(board);
+        }
 
         return "redirect:/board/list";
     }
@@ -85,9 +101,10 @@ public class BoardController {
               2.
      */
 
-    @GetMapping("/form/delete") // GET mapping for deleting s3, db object.
-    public String deleteBoard() throws Exception {
-        s3Service.delete();
+    @PostMapping("/delete") // GET mapping for deleting s3, db object.
+    public String deleteBoard(@ModelAttribute BoardDto boardDto) throws Exception {
+        s3Service.delete(boardDto.getPicture().getStoredFileName());
+        boardRepository.deleteById(boardDto.getId());
 
         return "redirect:/board/list";
     }
