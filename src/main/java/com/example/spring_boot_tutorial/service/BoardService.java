@@ -20,25 +20,25 @@ public class BoardService {
         boardRepository.save(board);
     } // TODO: edit entity fields.
 
-    public Board toEntity(BoardDto boardDto, Boolean isPicture) {
+    public Board toEntity(BoardDto boardDto, Long deletedFileId, Boolean isPicture) {
 
         Board board = Board.builder()
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
                 .build();
 
-        ImageHandler(board, boardDto, isPicture); // Handle Image if it's update, delete or no Image
+        ImageHandler(board, boardDto, deletedFileId, isPicture); // Handle Image if it's update, delete or no Image
 
         return board;
     }
 
-    public void ImageHandler(Board board, BoardDto boardDto, Boolean isPicture) {
+    public void ImageHandler(Board board, BoardDto boardDto, Long deletedFileId, Boolean isPicture) {
         if (boardDto.getId() != null) { // check if it's updating page
             Board findBoard = boardRepository.findById(boardDto.getId()).orElse(null);
             board.setId(findBoard.getId());
             if (isPicture) {
-                if (boardDto.getPicture().getId() != null) {
-                    pictureRepository.deleteById(boardDto.getPicture().getId());
+                if (deletedFileId != 0) {
+                    pictureRepository.deleteById(deletedFileId);
                 }
 
                 Picture picture = new Picture();
@@ -48,11 +48,11 @@ public class BoardService {
                 picture.setBoard(board); // set FK on Picture Table
                 board.setPicture(picture);
             } else {
-                if (boardDto.getPicture().getId() != null) {
-                    pictureRepository.deleteById(boardDto.getPicture().getId());
+                if (deletedFileId != 0) {
+                    pictureRepository.deleteById(deletedFileId);
                 }
             }
-        } else {
+        } else { // TODO remove multipart file when user clicked 'x' button
             if (isPicture) {
                 Picture picture = new Picture();
                 picture.setFilePath(boardDto.getFilePath());

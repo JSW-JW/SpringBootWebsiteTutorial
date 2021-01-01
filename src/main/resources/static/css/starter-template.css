@@ -6,3 +6,16 @@ body {
 /**your custom styles here**/
    color : white;
 }
+
+
+.image_section_container {
+  display:none;
+}
+
+.visible {
+  display:block;
+}
+
+.invisible {
+  display:none;
+}

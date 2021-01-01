@@ -14,6 +14,7 @@ public class BoardDto {
     private String filePath;
     private String originalFileName;
     private String storedFileName;
+    private String deletedFileId;
 
 
 

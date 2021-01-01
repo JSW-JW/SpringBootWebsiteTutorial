@@ -1,4 +1,4 @@
-package com.example.spring_boot_tutorial.controller;
+package com.example.spring_boot_tutorial.api;
 
 
 import com.example.spring_boot_tutorial.model.Board;

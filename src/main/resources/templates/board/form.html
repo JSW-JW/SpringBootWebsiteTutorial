@@ -29,10 +29,26 @@
             <button type="submit" class="btn">삭제</button>
         </form>
 
-        <form action="#" th:action="@{/board/form}" th:object="${board}" method="post" enctype="multipart/form-data">
+        <form action="#" th:action="@{/board/form}" runat="server" th:object="${board}" method="post"
+            enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
             <input type="hidden" th:field="*{picture.storedFileName}">
             <input type="hidden" th:field="*{picture.id}">
+            <input type="hidden" name="deletedFileId" value="">
+
+            <input type="file" id="imgInput" accept="image/*" name="file">
+            <div class="image_section_container">
+                <a href="#" class="remove_multipartfile">X</a>
+                <image th:src="*{filePath}" id="image_section" src="#" alt="your image" />
+            </div>
+
+            <div>
+                <a th:if="*{picture.filePath}" class="img_del_btn" href="#">click here to delete</a>
+            </div>
+
+            <div class="existed_file_container" th:if="*{picture.filePath}"><img th:src="*{picture.filePath}"
+                    alt="board-image" />
+            </div>
 
             <div class="form-group">
                 <label for="title" class="form-label">제목</label>
@@ -43,9 +59,6 @@
                     제목 에러 메세지
                 </div>
             </div>
-
-            <input type="file" accept="image/*" name="file">
-            <image th:src="*{filePath}"></image>
 
             <div class="form-group">
                 <label for="content" class="form-label">내용</label>
@@ -69,6 +82,44 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $(".img_del_btn").click(function () {
+                var id = "[(${board.picture.id})]";
+                $('input[name="deletedFileId"]:hidden').val(id);
+                document.querySelector(".existed_file_container").classList.add("invisible");
+            });
+        });
+
+        $(document).ready(function () {
+            $(".remove_multipartfile").click(function () {
+                $('#imgInput').val("");
+                document.querySelector(".image_section_container").classList.add("invisible");
+            });
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image_section').attr('src', e.target.result);
+                    document.querySelector(".image_section_container").classList.remove("invisible");
+                    document.querySelector(".image_section_container").classList.add("visible");
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 이벤트를 바인딩해서 input에 파일이 올라올때 위의 함수를 this context로 실행합니다.
+        $("#imgInput").change(function () {
+            readURL(this);
+        });
+
+    </script>
 
 </body>
 

@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.List;
 
-import static jdk.nashorn.internal.objects.Global.print;
 
 @Controller
 @RequestMapping("/board")
@@ -67,17 +65,25 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String submitBoard(@Valid BoardDto boardDto, @RequestParam(required = false) Long id, MultipartFile file, BindingResult bindingResult) throws Exception {
+    public String submitBoard(@Valid BoardDto boardDto, @RequestParam(name = "id", required = false) Long id,
+                              @RequestParam(name = "deletedFileId", required = false) Long deletedFileId, MultipartFile file, BindingResult bindingResult) throws Exception {
 //        System.out.println(boardValidator);
 //        boardValidator.validate(board, bindingResult);
 //        if (bindingResult.hasErrors()) {
 //            return "board/form";
 //        }
 
+        // TODO add validation of whether the user has right to update this image
+        // TODO or also there's a way to sequantialize the image and get index of deleted file.
 
+        if (deletedFileId == null) {
+            deletedFileId = 0L;
+        }
 
         if (!file.isEmpty()) {
-
+            if (deletedFileId != 0) {
+                s3Service.delete(boardDto.getPicture().getStoredFileName());
+            }
             String imgPath = s3Service.upload(file);
             String storedFileName = imgPath.substring(imgPath.lastIndexOf("/") + 1);
             String originalFileName = file.getOriginalFilename();
@@ -86,20 +92,19 @@ public class BoardController {
             boardDto.setOriginalFileName(originalFileName);
             boardDto.setStoredFileName(storedFileName);
 
-            Board board = boardService.toEntity(boardDto, true);
+            Board board = boardService.toEntity(boardDto, deletedFileId, true);
             boardService.saveBoard(board);
 
         } else {
-            Board board = boardService.toEntity(boardDto, false);
+            if (deletedFileId != 0) {
+                s3Service.delete(boardDto.getPicture().getStoredFileName());
+            }
+            Board board = boardService.toEntity(boardDto, deletedFileId, false);
             boardService.saveBoard(board);
         }
 
         return "redirect:/board/list";
     }
-
-    /*  TODO: 1. add s3 KeyName column in the db
-              2.
-     */
 
     @PostMapping("/delete") // GET mapping for deleting s3, db object.
     public String deleteBoard(@ModelAttribute BoardDto boardDto) throws Exception {
